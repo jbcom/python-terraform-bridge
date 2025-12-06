@@ -16,6 +16,8 @@ Example usage with decorators:
         @registry.data_source(key="users", module_class="myservice")
         def list_users(self, domain: str = None) -> dict:
             '''List all users.'''
+
+from __future__ import annotations
             return {"user1": {...}, "user2": {...}}
 
     # Generate Terraform modules
