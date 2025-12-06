@@ -9,6 +9,7 @@ from __future__ import annotations
 import concurrent.futures
 import json
 import time
+
 from copy import deepcopy
 from pathlib import Path
 from shlex import quote as shlex_quote
@@ -93,7 +94,9 @@ class TerraformModuleResources:
             binary_name: Command to invoke the Python runtime.
         """
         self.terraform_modules_dir = terraform_modules_dir or self.DEFAULT_MODULES_DIR
-        self.terraform_modules_name_delim = terraform_modules_name_delim or self.DEFAULT_NAME_DELIM
+        self.terraform_modules_name_delim = (
+            terraform_modules_name_delim or self.DEFAULT_NAME_DELIM
+        )
         self.binary_name = binary_name or self.DEFAULT_BINARY_NAME
 
         if terraform_modules_class is None:
@@ -207,7 +210,9 @@ class TerraformModuleResources:
                             processed_chunks[k] = strtobool(v) if k == "required" else v
 
                     if not env_name:
-                        raise ValueError(f"Environment variable {param} is missing its name")
+                        raise ValueError(
+                            f"Environment variable {param} is missing its name"
+                        )
                     if processed_chunks.get("sensitive", False):
                         self.sensitive_env_variables[env_name] = processed_chunks
                     else:
@@ -281,11 +286,15 @@ class TerraformModuleResources:
                         elif k == "bind_log_file_name_to_key":
                             foreach_bind_log_file_name_to_key = strtobool(v)
 
-                    foreach_module_path = self.get_module_path(module_name=foreach_module_name)
+                    foreach_module_path = self.get_module_path(
+                        module_name=foreach_module_name
+                    )
                     self.foreach_modules[foreach_module_path] = self.get_module_name(
                         module_name=foreach_module_call
                     )
-                    self.foreach_bind_log_file_name_to_key = foreach_bind_log_file_name_to_key
+                    self.foreach_bind_log_file_name_to_key = (
+                        foreach_bind_log_file_name_to_key
+                    )
                     continue
 
                 # Parse regular parameter
@@ -319,7 +328,9 @@ class TerraformModuleResources:
                 try:
                     module_param = TerraformModuleParameter(**expanded_param)
                 except TypeError as exc:
-                    raise RuntimeError(f"Failed to generate parameter: {expanded_param}") from exc
+                    raise RuntimeError(
+                        f"Failed to generate parameter: {expanded_param}"
+                    ) from exc
 
                 module_params.append(module_param)
 
@@ -432,7 +443,9 @@ class TerraformModuleResources:
                 "source": f"{provider_organization}/{provider_type}",
             }
             if not is_nothing(provider_min_version):
-                terraform_providers[provider_type]["version"] = f">={provider_min_version}"
+                terraform_providers[provider_type]["version"] = (
+                    f">={provider_min_version}"
+                )
 
         if not is_nothing(terraform_providers):
             terraform["required_providers"] = terraform_providers
@@ -449,7 +462,9 @@ class TerraformModuleResources:
             key = self.generator_parameters.get("key")
 
         if is_nothing(key):
-            raise RuntimeError("Cannot generate external data module without a data key")
+            raise RuntimeError(
+                "Cannot generate external data module without a data key"
+            )
 
         query = self.get_triggers()
 
@@ -465,11 +480,17 @@ class TerraformModuleResources:
             {
                 "external": {"default": external_data},
                 "env_var": {
-                    env_name: {"id": env_name, "required": env_data.get("required", False)}
+                    env_name: {
+                        "id": env_name,
+                        "required": env_data.get("required", False),
+                    }
                     for env_name, env_data in self.env_variables.items()
                 },
                 "env_sensitive": {
-                    env_name: {"id": env_name, "required": env_data.get("required", False)}
+                    env_name: {
+                        "id": env_name,
+                        "required": env_data.get("required", False),
+                    }
                     for env_name, env_data in self.sensitive_env_variables.items()
                 },
             }
@@ -480,7 +501,9 @@ class TerraformModuleResources:
             results_expr = '${data.external.default.result["' + key + '"]}'
         else:
             results_expr = (
-                '${jsondecode(base64decode(data.external.default.result["' + key + '"]))}'
+                '${jsondecode(base64decode(data.external.default.result["'
+                + key
+                + '"]))}'
             )
 
         tf_json = drop_empty_blocks(
@@ -501,7 +524,9 @@ class TerraformModuleResources:
         # Add extra outputs
         for extra_key, _extra_config in self.extra_outputs.items():
             tf_json["locals"][extra_key] = (
-                '${jsondecode(base64decode(data.external.default.result["' + extra_key + '"]))}'
+                '${jsondecode(base64decode(data.external.default.result["'
+                + extra_key
+                + '"]))}'
             )
             tf_json["output"][extra_key] = {
                 "value": "${local." + extra_key + "}",
@@ -530,14 +555,18 @@ class TerraformModuleResources:
 
     def get_null_resource(self, provisioner_type: str | None = None) -> dict[str, Any]:
         """Generate null_resource (terraform_data) Terraform module."""
-        provisioner_type = provisioner_type or self.generator_parameters.get("provisioner_type")
+        provisioner_type = provisioner_type or self.generator_parameters.get(
+            "provisioner_type"
+        )
         if provisioner_type is None:
             provisioner_type = "local-exec"
 
         triggers = self.get_triggers()
 
         environment = {
-            name: "${self.triggers_replace." + name + "}" for name in triggers if name != "script"
+            name: "${self.triggers_replace." + name + "}"
+            for name in triggers
+            if name != "script"
         }
 
         # Add environment variable references
@@ -557,11 +586,17 @@ class TerraformModuleResources:
         data_blocks = drop_empty_blocks(
             {
                 "env_var": {
-                    env_name: {"id": env_name, "required": env_data.get("required", False)}
+                    env_name: {
+                        "id": env_name,
+                        "required": env_data.get("required", False),
+                    }
                     for env_name, env_data in self.env_variables.items()
                 },
                 "env_sensitive": {
-                    env_name: {"id": env_name, "required": env_data.get("required", False)}
+                    env_name: {
+                        "id": env_name,
+                        "required": env_data.get("required", False),
+                    }
                     for env_name, env_data in self.sensitive_env_variables.items()
                 },
             }
@@ -576,7 +611,9 @@ class TerraformModuleResources:
             }
         )
 
-    def get_mixed(self, module_type: str | None = None, **kwargs: Any) -> dict[str, Any]:
+    def get_mixed(
+        self, module_type: str | None = None, **kwargs: Any
+    ) -> dict[str, Any]:
         """Generate module based on type."""
         if module_type is None:
             module_type = self.module_type
@@ -596,7 +633,9 @@ class TerraformModuleResources:
         import re
 
         if is_nothing(module_class):
-            return self.generator_parameters.get("module_class", self.terraform_modules_class)
+            return self.generator_parameters.get(
+                "module_class", self.terraform_modules_class
+            )
 
         if not module_class[:1].isalnum():
             first_alpha = re.search(r"[A-Za-z0-9]", module_class)
@@ -643,7 +682,9 @@ class TerraformModuleResources:
         modules_dir = Path(modules_dir)
 
         module_class = self.get_module_class(module_class=module_class)
-        module_name = self.get_module_name(module_class=module_class, module_name=module_name)
+        module_name = self.get_module_name(
+            module_class=module_class, module_name=module_name
+        )
 
         if module_class == module_name:
             return modules_dir.joinpath(module_name, modules_file_name)
@@ -673,7 +714,9 @@ class TerraformModuleResources:
 
             for module_name, module_docs in terraform_modules.items():
                 futures.append(
-                    executor.submit(cls, module_name=module_name, docstring=module_docs, **kwargs)
+                    executor.submit(
+                        cls, module_name=module_name, docstring=module_docs, **kwargs
+                    )
                 )
 
             for future in concurrent.futures.as_completed(futures):
