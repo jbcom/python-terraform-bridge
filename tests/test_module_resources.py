@@ -32,7 +32,8 @@ class TestTerraformModuleResources:
         """Test parsing of generator parameters."""
         docstring = """Get data.
 
-        generator=key: output, type: data_source, module_class: myservice, plaintext_output: true
+        generator=key: output, type: data_source, module_class: myservice,
+        plaintext_output: true
         """
 
         resources = TerraformModuleResources(
