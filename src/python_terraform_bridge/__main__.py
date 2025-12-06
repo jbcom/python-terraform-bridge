@@ -9,5 +9,6 @@ import sys
 
 from python_terraform_bridge.cli import main
 
+
 if __name__ == "__main__":
     sys.exit(main())

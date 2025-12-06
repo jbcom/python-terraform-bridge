@@ -118,6 +118,7 @@ class TerraformModuleParameter:
             TerraformModuleParameter instance.
         """
         import inspect
+
         from typing import get_origin
 
         # Determine if required based on default

@@ -1,0 +1,26 @@
+# python-terraform-bridge Development
+
+## Package Overview
+
+Bridge Python classes to Terraform external data sources and modules.
+
+## Commands
+
+```bash
+uv sync --extra tests    # Install deps
+uv run pytest tests/ -v  # Run tests
+uvx ruff check src/      # Lint
+uv build                 # Build package
+```
+
+## Dependencies
+
+- directed-inputs-class
+- extended-data-types
+- lifecyclelogging
+
+## Key Patterns
+
+- Use absolute imports
+- Add `from __future__ import annotations`
+- Follow conventional commits

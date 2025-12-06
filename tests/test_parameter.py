@@ -87,7 +87,10 @@ class TestTerraformModuleParameter:
         trigger = param.get_trigger()
 
         assert "jsonencode" in trigger
-        assert trigger == "${try(nonsensitive(jsonencode(var.config)), jsonencode(var.config))}"
+        assert (
+            trigger
+            == "${try(nonsensitive(jsonencode(var.config)), jsonencode(var.config))}"
+        )
 
     def test_get_trigger_base64_encode(self) -> None:
         """Test trigger with base64 encoding."""
@@ -98,7 +101,9 @@ class TestTerraformModuleParameter:
 
     def test_get_trigger_both_encodings(self) -> None:
         """Test trigger with both encodings."""
-        param = TerraformModuleParameter(name="data", json_encode=True, base64_encode=True)
+        param = TerraformModuleParameter(
+            name="data", json_encode=True, base64_encode=True
+        )
         trigger = param.get_trigger()
 
         # Both should be applied

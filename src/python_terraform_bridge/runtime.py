@@ -15,11 +15,13 @@ import base64
 import json
 import secrets
 import sys
+
 from typing import TYPE_CHECKING, Any
 
 from directed_inputs_class import DirectedInputsClass
 from extended_data_types import get_available_methods
 from lifecyclelogging import Logging
+
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -141,12 +143,16 @@ class TerraformRuntime:
             result: Method result to output.
             method_name: Name of the method (used as output key).
         """
-        if isinstance(result, dict) and all(isinstance(v, str) for v in result.values()):
+        if isinstance(result, dict) and all(
+            isinstance(v, str) for v in result.values()
+        ):
             # Already a string dict, output directly
             output = result
         else:
             # Encode as base64 JSON
-            encoded = base64.b64encode(json.dumps(result, default=str).encode()).decode()
+            encoded = base64.b64encode(
+                json.dumps(result, default=str).encode()
+            ).decode()
             output = {method_name: encoded}
 
         print(json.dumps(output))
@@ -360,7 +366,9 @@ def lambda_handler_factory(
 
             return {
                 "statusCode": 200,
-                "body": json.dumps(result, default=str) if not isinstance(result, str) else result,
+                "body": json.dumps(result, default=str)
+                if not isinstance(result, str)
+                else result,
             }
 
         except Exception as e:

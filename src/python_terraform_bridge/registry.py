@@ -23,6 +23,7 @@ from __future__ import annotations
 import functools
 import inspect
 import json
+
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path  # noqa: TC003 - used at runtime for Path.open()
@@ -30,6 +31,7 @@ from typing import Any, TypeVar
 
 from python_terraform_bridge.module_resources import TerraformModuleResources
 from python_terraform_bridge.parameter import TerraformModuleParameter
+
 
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -353,7 +355,9 @@ class TerraformRegistry:
         Returns:
             Dict mapping method names to descriptions.
         """
-        return {name: config.description or "" for name, config in self._methods.items()}
+        return {
+            name: config.description or "" for name, config in self._methods.items()
+        }
 
     def generate_modules(
         self,

@@ -49,8 +49,13 @@ Example usage with docstrings (legacy/compatible):
 
 from python_terraform_bridge.module_resources import TerraformModuleResources
 from python_terraform_bridge.parameter import TerraformModuleParameter
-from python_terraform_bridge.registry import TerraformRegistry, data_source, null_resource
+from python_terraform_bridge.registry import (
+    TerraformRegistry,
+    data_source,
+    null_resource,
+)
 from python_terraform_bridge.runtime import TerraformRuntime
+
 
 __all__ = [
     "TerraformModuleParameter",
