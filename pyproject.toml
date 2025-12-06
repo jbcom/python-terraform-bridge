@@ -93,3 +93,6 @@ version_variables = ["src/python_terraform_bridge/__init__.py:__version__"]
 [tool.semantic_release.branches.main]
 match = "main"
 prerelease = false
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["E501"]
