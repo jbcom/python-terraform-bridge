@@ -36,7 +36,7 @@ keywords = [
 ]
 dependencies = [
     "directed-inputs-class>=202511.3.0",
-    "extended-data-types>=202511.9.0",
+    "extended-data-types>=202511.8.0",
     "lifecyclelogging>=202511.3.0",
     "tssplit>=0.1.1",
 ]
