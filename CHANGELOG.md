@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.1.1 (2025-12-07)
+
+### Bug Fixes
+
+- Restore working Dockerfile with Go 1.25.3 and correct process-compose install
+  ([`97650bf`](https://github.com/jbcom/python-terraform-bridge/commit/97650bfe450ee92013be3e3067e98694cc47386d))
+
+
 ## v0.1.0 (2025-12-06)
 
 - Initial Release
